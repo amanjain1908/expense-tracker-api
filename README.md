@@ -1,116 +1,50 @@
+Expense Tracker API (with Docker support)
 
-# Expense Tracker API
+A RESTful Spring Boot API for tracking personal expenses, categories, and transactions, secured with JWT authentication.
 
-A simple REST API created using Spring Boot and MySql.
+This project is forked from arsan13/expense-tracker-api, which I used as a learning reference for building a Spring Boot + JWT authentication backend. I extended it with Docker support to containerize the application and its database for consistent, one-command local setup.
 
-## Run Locally
+What I added
+Dockerfile — multi-stage build to containerize the Spring Boot application
+docker-compose.yml — orchestrates the app and a MySQL container together, networked internally
+Environment-based configuration — moved database credentials out of hardcoded config files into environment variables (.env) to avoid committing secrets
+Debugged and resolved container networking and database connectivity issues between the app and MySQL containers
+Tech Stack
+Java 17
+Spring Boot, Spring Data JPA
+MySQL 8.0
+JWT Authentication
+Docker & Docker Compose
+Maven
+Getting Started
+Prerequisites
+Docker Desktop installed and running
+Setup
+Clone this repository git clone https://github.com/amanjain1908/expense-tracker-api.git
+cd expense-tracker-api
+Create a .env file in the project root: DB_PASSWORD=your_mysql_password
+(Optional, for running outside Docker) Copy the local properties template and fill in your own credentials: cp src/main/resources/application-local.properties.example src/main/resources/application-local.properties
+Build and run everything with Docker Compose: docker compose up --build
 
-Clone the project
+The API will be available at http://localhost:7077.
 
-```bash
-  git clone https://github.com/arsan13/expense-tracker-api.git
-```
+API Endpoints
+Method	Endpoint	Description
+POST	/api/users/register/	Register a new user
+POST	/api/users/login/	Login and receive a JWT
+GET	/api/categories/	Get all categories
+POST	/api/categories/	Create a new category
+GET	/api/categories/{id}	Get a category by ID
+PUT	/api/categories/{id}	Update a category
+DELETE	/api/categories/{id}	Delete a category
+GET	/api/categories/{cid}/transactions/	Get all transactions in a category
+POST	/api/categories/{cid}/transactions/	Create a transaction in a category
+GET	/api/categories/{cid}/transactions/{tid}	Get a specific transaction
+PUT	/api/categories/{cid}/transactions/{tid}	Update a transaction
+DELETE	/api/categories/{cid}/transactions/{tid}	Delete a transaction
 
-Go to the project directory
+All endpoints except register/login require a Bearer <token> in the Authorization header.
 
-```bash
-  cd expense-tracker-api
-```
+Notes
 
-Create a database
-
-```bash
-  CREATE DATABASE database_name
-```
-
-Configure database properties in "application.properties" file as per your need
-
-```bash
-  spring.datasource.url=jdbc:mysql://localhost:3306/expense_tracker
-  spring.datasource.username=root
-  spring.datasource.password=
-```
-
-Build and Run the app
-
-```bash
-  mvn spring-boot:run
-```
-
-The app will start running at http://localhost:8080
-
-
-## Swagger - API Documentation
-- [UI format](https://expense-tracker-api-fm78.onrender.com/swagger-ui.html) 
-- [JSON format](https://expense-tracker-api-fm78.onrender.com/v2/api-docs)
-
-Cilck [here](https://swagger.io/) to know more about Swagger
-
-## Explore REST APIs
-  
-### User Authentication
-
-| Method        |         URL        | Description   | Return          |      
-| ------------- | ------------------ | ------------- | --------------- |
-| POST          | api/users/register/ | Sign-up       | JSON Web Token  |
-| POST          | api/users/login/    | Login         | JSON Web Token  |               
-
-### Categories
-
-| Method        |         URL        | Description   | Return          |      
-| --- | --- | --- | --- |
-| GET | api/categories/ | Get all categories | Array of JSON objects |
-| GET | api/categories/{id} | Get a category by id | Single JSON object |            
-| POST | api/categories/ | Create a new category | Created JSON object |
-| PUT | api/categories/{id} | Update an existing category | Updated JSON object |
-| DELETE | api/categories/{id} | Delete a category | Success message |
-
-### Transactions
-
-| Method        |         URL        | Description   | Return          |      
-| --- | --- | --- | --- |
-| GET | api/categories/{cid}/transactions/ | Get all transactions of "cid" category | Array of JSON objects |
-| GET | api/categories/{cid}/transactions/{tid} | Get a single transaction by "tid" of category "cid" | Single JSON object |            
-| POST | api/categories/{cid}/transactions/ | Insert a new transaction for the category "cid" | Created JSON object |
-| PUT | api/categories/{cid}/transactions/{tid} | Update an existing transaction | Updated JSON object |
-| DELETE | api/categories/{cid}/transactions/{tid} | Delete a transaction | Success message |
-
-> **_NOTE:_**  
-The endpoints of "Categories" and "Transactions" are restricted. To access those endpoints, use the token which is generated after logging-in as the value of the Bearer in the Authorization header as follows:  
-**"Authorization: Bearer Token_id"**
-
-## Sample Request Body
-
-### User - Register
-```bash
-  {
-    "firstName": "Thomas",
-    "lastName": "Shelby",
-    "email": "shelby@gmail.com",
-    "password": "test123"
-  }
-```
-### User - Login
-```bash
-  {
-    "email": "shelby@gmail.com",
-    "password": "test123"
-  }
-```
-
-### Categories
-```bash
-  {
-    "title": "Shopping",
-    "description": "All shopping expenses in xyz mall"
-  }
-```
-
-### Transactions
-```bash
-  {
-    "amount": 4000,
-    "note": "Spent higher than last time",
-    "transactionDate" : "2021-19-09"
-  }
-```
+This project was built as a hands-on way to strengthen my Spring Boot and Docker skills, using a reference implementation as a starting point and extending it with containerization and secure configuration handling.

@@ -33,3 +33,7 @@ build/
 .vscode/
 
 application-dev.properties
+
+.env
+
+application-local.properties
